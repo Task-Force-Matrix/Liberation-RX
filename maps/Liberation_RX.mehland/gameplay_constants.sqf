@@ -1,7 +1,5 @@
 GRLIB_map_modder = "Z@Warrior";
-GRLIB_save_key = "LRX_YULAKIA_SAVEGAME_PSK";	// change this value if you want different savegames on different map
-GRLIB_side_resistance = RESISTANCE;
-GRLIB_side_civilian = CIVILIAN;
+GRLIB_save_key = "LRX_MEHLAND_SAVEGAME_PSK";	// change this value if you want different savegames on different map
 GRLIB_respawn_marker = "respawn_west";
 GRLIB_sector_size = 800;
 GRLIB_capture_size = 175;
@@ -17,7 +15,6 @@ GRLIB_patrol_cap = 150;
 GRLIB_fob_range = 125;
 GRLIB_surrender_chance = 80;
 GRLIB_halo_altitude = 2000;
-GRLIB_squad_size_bonus = 0;
 GRLIB_perm_ban = -30;
 GRLIB_perm_inf = 200;
 GRLIB_perm_log = 500;
