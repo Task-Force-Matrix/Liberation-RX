@@ -13,48 +13,58 @@ private _timer = 0;
 private _patrol = false;
 private ["_target", "_basepos", "_waypoint", "_wp0"];
 
-while { GRLIB_endgame == 0 && ({alive _x} count (units _grp) > 0) } do {
-	if (side _grp == GRLIB_side_enemy) then {
-		_target = [_flagpos] call F_getNearestBlufor;
-	};
-	if (side _grp == GRLIB_side_friendly) then {
-		_target = (units GRLIB_side_enemy) select { alive _x && (isNull objectParent _x) && (_x distance2D _flagpos < GRLIB_capture_size)} select 0;
-	};
-
-	if (isNil "_target") then {
-		if (!_patrol) then {
-			_patrol = true;
-			[_grp, _flagpos, _radius] spawn patrol_ai;
-		};
+// LK_MOD_SECTOR_DEF
+if (GRLIB_LAMBS_enabled && side _grp == GRLIB_side_enemy && floor random 100 > 50) then {
+	if (floor random 100 > 35) then {
+		[_grp, _flagpos, 160, 4, [], true, false, true] call lambs_wp_fnc_taskPatrol;
 	} else {
-		_basepos = getPosATL _target;
-		if ( time > _timer) then {
-			_patrol = false;
-			if (_grp_veh isKindOf "Truck_F" && count (crew _grp_veh) > 0 ) then { [_grp] call F_ejectGroup };
-
-			[_grp] call F_deleteWaypoints;
-			_waypoint = _grp addWaypoint [_basepos, _radius];
-			_waypoint setWaypointType "MOVE";
-			_waypoint setWaypointBehaviour "AWARE";
-			_waypoint setWaypointCombatMode "YELLOW";
-			_waypoint setWaypointSpeed "FULL";
-			_waypoint = _grp addWaypoint [_basepos, _radius];
-			_waypoint setWaypointType "MOVE";
-			_waypoint = _grp addWaypoint [_basepos, _radius];
-			_waypoint setWaypointType "MOVE";
-			_waypoint = _grp addWaypoint [_basepos, _radius];
-			_waypoint setWaypointType "MOVE";
-			_waypoint = _grp addWaypoint [_basepos, _radius];
-			_waypoint setWaypointType "CYCLE";
-			{ _x doFollow leader _grp } foreach units _grp;
-			_timer = round (time + (15 * 60));
-		};
+		[_grp, [_flagpos, 160, 160, 0, false], "AWARE", "YELLOW", "UNCHANGED", "COLUMN", "", [6, 10, 20]] call CBA_fnc_taskSearchArea;
 	};
+	diag_log format ["MS_DBG: Lambs defend active for group: %1", _grp];
+} else {
+	while { GRLIB_endgame == 0 && ({alive _x} count (units _grp) > 0) } do {
+		if (side _grp == GRLIB_side_enemy) then {
+			_target = [_flagpos] call F_getNearestBlufor;
+		};
+		if (side _grp == GRLIB_side_friendly) then {
+			_target = (units GRLIB_side_enemy) select { alive _x && (isNull objectParent _x) && (_x distance2D _flagpos < GRLIB_capture_size)} select 0;
+		};
 
-	{ 
-		[_x] spawn F_fixPosUnit;
-		sleep 1;
-	} forEach (units _grp);
+		if (isNil "_target") then {
+			if (!_patrol) then {
+				_patrol = true;
+				[_grp, _flagpos, _radius] spawn patrol_ai;
+			};
+		} else {
+			_basepos = getPosATL _target;
+			if ( time > _timer) then {
+				_patrol = false;
+				if (_grp_veh isKindOf "Truck_F" && count (crew _grp_veh) > 0 ) then { [_grp] call F_ejectGroup };
 
-	sleep 300;
+				[_grp] call F_deleteWaypoints;
+				_waypoint = _grp addWaypoint [_basepos, _radius];
+				_waypoint setWaypointType "MOVE";
+				_waypoint setWaypointBehaviour "AWARE";
+				_waypoint setWaypointCombatMode "YELLOW";
+				_waypoint setWaypointSpeed "FULL";
+				_waypoint = _grp addWaypoint [_basepos, _radius];
+				_waypoint setWaypointType "MOVE";
+				_waypoint = _grp addWaypoint [_basepos, _radius];
+				_waypoint setWaypointType "MOVE";
+				_waypoint = _grp addWaypoint [_basepos, _radius];
+				_waypoint setWaypointType "MOVE";
+				_waypoint = _grp addWaypoint [_basepos, _radius];
+				_waypoint setWaypointType "CYCLE";
+				{ _x doFollow leader _grp } foreach units _grp;
+				_timer = round (time + (15 * 60));
+			};
+		};
+
+		{ 
+			[_x] spawn F_fixPosUnit;
+			sleep 1;
+		} forEach (units _grp);
+
+		sleep 300;
+	};
 };

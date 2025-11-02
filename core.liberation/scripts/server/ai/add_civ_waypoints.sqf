@@ -20,7 +20,9 @@ _grp setSpeedMode _speed;
 private ["_waypoint", "_wp0", "_radius", "_nextpos"];
 private _max_try = 50;
 while { (count (waypoints _grp) <= 5) && _max_try > 0} do {
-	_radius = GRLIB_capture_size + ([[-150,0,150], 0] call F_getRND);
+	// LK_MOD
+	// _radius = GRLIB_capture_size + ([[-150,0,150], 0] call F_getRND);
+	_radius = 400;
 	_nextpos = ([_basepos, _radius] call F_getRandomPos);
 	if !(surfaceIsWater _nextpos) then {
 		_waypoint = _grp addWaypoint [_nextpos, 0];

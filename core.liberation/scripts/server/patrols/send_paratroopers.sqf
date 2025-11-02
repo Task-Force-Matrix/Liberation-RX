@@ -82,9 +82,11 @@ _vehicle lock 0;
 {
 	_x assignAsCargoIndex [_vehicle, (_forEachIndex + 1)];
 	_x moveInCargo _vehicle;
-	_x setSkill _unit_skill;
-	_x setSkill ["courage", 1];
-	_x allowFleeing 0;
+	// LK_MOD
+	// _x setSkill _unit_skill;
+	[_x] call set_unit_subskills;
+	// _x setSkill ["courage", 1];
+	_x allowFleeing 0.2;
 } foreach (units _para_group);
 
 [_para_group, 3600] call F_setUnitTTL;

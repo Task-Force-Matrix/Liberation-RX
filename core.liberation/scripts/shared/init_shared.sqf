@@ -46,3 +46,6 @@ RPT_fnc_CompoVehicle = compileFinal preprocessFileLineNumbers "addons\VAM\fn_com
 RPT_fnc_TextureVehicle = compileFinal preprocessFileLineNumbers "addons\VAM\fn_textureVehicle.sqf";
 fnc_VAM_common_camo = compileFinal preprocessFileLineNumbers "addons\VAM\vehicles\fnc_VAM_common_camo.sqf";
 fnc_VAM_common_comp = compileFinal preprocessFileLineNumbers "addons\VAM\vehicles\fnc_VAM_common_comp.sqf";
+
+//LK_MOD: setting unit's subskills
+set_unit_subskills = compileFinal preprocessFileLineNumbers "scripts\shared\set_unit_subskills.sqf";

@@ -42,14 +42,19 @@ private ["_unit", "_ai_rank", "_pos", "_backpack"];
 			_unit setVariable ["GRLIB_mission_AI", true, true];
 			_unit setVariable ["ace_sys_wounds_uncon", false];
 			_unit setVariable ["acex_headless_blacklist", true, true];
-			_unit setSkill ["courage", 1];
-			_unit allowFleeing 0;
+			// LK_MOD
+			// _unit setSkill ["courage", 1];
+			// [_unit] call set_unit_subskills;
+			// _unit allowFleeing 0.2;
 		};
 		_unit addMPEventHandler ["MPKilled", {_this spawn kill_manager}];
 		_unit setPitch 1;
 		_ai_rank = selectRandom (GRLIB_rank_level select [0, _max_rank]);
 		_unit setUnitRank _ai_rank;
-		_unit setSkill (0.5 + (GRLIB_rank_level find _ai_rank) * 0.05);
+		// LK_MOD
+		// _unit setSkill (0.5 + (GRLIB_rank_level find _ai_rank) * 0.05);
+		[_unit] call set_unit_subskills;
+		_unit allowFleeing 0.3;
 
 		if (_type == "divers") then {
 			_pos set [2, -6];

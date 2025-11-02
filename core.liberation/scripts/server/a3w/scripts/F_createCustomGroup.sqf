@@ -46,7 +46,10 @@ private _grp = [_pos, _unitclass, _side, _type, true] call F_libSpawnUnits;
 //  Veteran > 0.65 and <= 0.85
 //  Expert > 0.85
 {
-	_x setSkill 0.75;
+	// LK_MOD
+	// _x setSkill 0.75;
+	[_x] call set_unit_subskills;
+	
 	// cosmetic change
 	if (typeOf _x == "C_IDAP_Man_Paramedic_01_F") then {
 		//_unit addVest "V_Plain_medical_F";

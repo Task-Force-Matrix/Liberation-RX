@@ -14,7 +14,9 @@ publicVariable "GRLIB_patrol_sectors";
 
 while {true} do {
 	if (GRLIB_patrol_current < GRLIB_patrol_amount && diag_fps > 15) then {
-		private _level = round (25 + floor random 70);
+		// LK_MOD_PATROL
+		// private _level = round (25 + floor random 70);
+		private _level = round (10 + floor random 45);
 		private _hc = [] call F_lessLoadedHC;
 		if (isNull _hc) then {
 			[_level] spawn manage_one_enemy_patrol;

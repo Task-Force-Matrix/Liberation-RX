@@ -13,6 +13,11 @@ GRLIB_paramsV2_save_key = format ["%1-%2", GRLIB_paramsV1_save_key, str (GRLIB_p
 GRLIB_3CB_enabled = isClass(configFile >> "CfgPatches" >> "UK3CB_Factions_Common"); // Returns true if 3CB is enabled
 GRLIB_ACE_enabled = isClass(configFile >> "cfgPatches" >> "ace_main"); // Returns true if ACE is enabled
 GRLIB_ACE_medical_enabled = isClass(configFile >> "cfgPatches" >> "ace_medical"); // Returns true if ACE Medical is enabled
+
+// LK_MOD
+GRLIB_LAMBS_enabled = isClass(configFile >> "CfgPatches" >> "lambs_main"); // Returns true if Lambs Danger is enabled
+GRLIB_CBA_enabled = isClass(configFile >> "CfgPatches" >> "cba_main"); // Returns true if CBA is enabled
+
 GRLIB_ACRE_enabled = isClass(configFile >> "cfgPatches" >> "acre_main"); // Returns true if ACRE is enabled
 GRLIB_AMF_enabled = isClass(configFile >> "cfgPatches" >> "AMF_weapon_F"); // Returns true if GlobMob is enabled
 GRLIB_CUPU_enabled = isClass(configFile >> "CfgPatches" >> "CUP_Creatures_Extra"); // Returns true if CUP Units is enabled

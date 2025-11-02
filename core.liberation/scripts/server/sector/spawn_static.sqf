@@ -27,13 +27,16 @@ private _grp = [_vehicle, GRLIB_side_enemy] call F_forceCrew;
 sleep 1;
 
 // Spotters
+// LK_MOD
 _unit = _grp createUnit [opfor_spotter, _vehicle, [], 3, "None"];
 [_unit] joinSilent _grp;
 _unit addMPEventHandler ["MPKilled", {_this spawn kill_manager}];
+[_unit] call set_unit_subskills;
 sleep 0.5;
 _unit = _grp createUnit [opfor_spotter, _vehicle, [], 3, "None"];
 [_unit] joinSilent _grp;
 _unit addMPEventHandler ["MPKilled", {_this spawn kill_manager}];
+[_unit] call set_unit_subskills;
 
 diag_log format [ "Spawn Static Weapon (%1) on sector %2 at %3", typeOf _vehicle, _sector, time ];
 

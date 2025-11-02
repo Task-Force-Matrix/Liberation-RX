@@ -5,8 +5,11 @@ diag_log format ["--- LRX Enemy Patrol - trigger alert %1", _level];
 GRLIB_patrol_current = GRLIB_patrol_current + 1;
 publicVariable "GRLIB_patrol_current";
 
-sleep (60 + (floor random 120));
-while { combat_readiness < _level } do { sleep 120 };
+// LK_MOD_PATROL
+// sleep (60 + (floor random 120));
+// while { combat_readiness < _level } do { sleep 120 };
+sleep (30 + (floor random 90));
+while { combat_readiness < _level } do { sleep 60 };
 
 private _opfor_veh = objNull;
 private _opfor_grp = grpNull;
@@ -23,7 +26,9 @@ if (count _usable_sectors > 0) then {
 	private _sector = selectRandom _usable_sectors;
 	private _sector_pos = markerPos _sector;
 	// 50% in vehicles
-	if (floor random 100 > 50 && count militia_vehicles > 0) then {
+	// LK_MOD_PATROL
+	// if (floor random 100 > 50 && count militia_vehicles > 0) then {
+	if (floor random 100 > 70 && count militia_vehicles > 0) then {
 		private _veh_type = selectRandom militia_vehicles;
 		_opfor_veh = [_sector_pos, _veh_type, 3, false, GRLIB_side_enemy, false] call F_libSpawnVehicle;
 		_opfor_grp = [_opfor_veh, GRLIB_side_enemy, true] call F_forceCrew;
