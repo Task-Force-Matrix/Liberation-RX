@@ -27,6 +27,6 @@ if (_nearest_sector != "") then {
         { _x doFollow (leader _grp) } foreach (units _grp);
     };
 } else {
-    sleep 60;
+    sleep 180;
     deleteVehicle _unit;
 };

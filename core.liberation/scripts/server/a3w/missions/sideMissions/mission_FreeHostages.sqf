@@ -9,6 +9,8 @@ _setupVars = {
 	_ignoreAiDeaths = true;
 	_detected = false;
 	private _building_classname = [
+		"House",
+		"House_F",
 		"Land_i_Shed_Ind_F",
 		"Land_i_House_Big_01_V2_F",
 		"Land_i_House_Big_01_V3_F",
@@ -18,7 +20,7 @@ _setupVars = {
 	_all_buildings = [];
 	{
 		_missionlocation = _x;
-		private _buildings = (nearestObjects [markerPos _missionlocation, _building_classname, 300]) select {alive _x};
+		private _buildings = (nearestObjects [markerPos _missionlocation, _building_classname, 400]) select {alive _x};
 		{
 			_nb = count ([_x] call BIS_fnc_buildingPositions);
 			if (_nb >= 9) then { _all_buildings pushBack _x };
@@ -49,18 +51,27 @@ _setupObjects = {
 	} forEach _hostages;
 
 	// Spawn Enemy
+	// _managed_units = ["militia", 10, _missionPos, 0, _missionBuilding] call F_spawnBuildingSquad;
 	_managed_units = ["militia", 10, _missionPos, 0, _missionBuilding] call F_spawnBuildingSquad;
 	_aiGroup = group (_managed_units select 0);
-
-	private _grp_bomber = [_missionPos, 4, "militia", false] call createCustomGroup;
+	
+	if (random 1 > 0.5) then {
+		private _grppatrol = [_missionPos, opfor_squad_8_standard, GRLIB_side_enemy, "infantry", true] call F_libSpawnUnits;
+		[_grppatrol, _missionPos, 100] spawn patrol_ai;
+		{
+			_managed_units pushBack _x;
+		} forEach (units _grppatrol);
+	};
+	
+	private _grp_bomber = [_missionPos, (0 + (floor random 3)), "militia", false] call createCustomGroup;
 	{ 
 		_managed_units pushBack _x;
-		if (_forEachIndex == 0) then {			
+		if (_forEachIndex == 0 && (random 1 > 0.75)) then {			
 			doStop _x;
 			_x setPosATL _missionPos;
-			[_x, 10] spawn bomber_ai;
+			[_x, 2] spawn bomber_ai;
 		} else {
-			[_x, 40] spawn bomber_ai;
+			[_x, 20] spawn bomber_ai;
 		};
 	} forEach (units _grp_bomber);
 
@@ -80,7 +91,7 @@ _waitUntilExec = {
 		if (_aiGroup knowsAbout _x == 4 ) then { _ret = true };
 	} forEach ([_missionPos, GRLIB_sector_size] call F_getNearbyPlayers);
 
-	if (_ret && !_detected) then {
+	if (_ret && !_detected && ((random 20) < 1.5)) then {
 		_detected = true;
 		private _sound = "A3\data_f_curator\sound\cfgsounds\air_raid.wss";
 		if (GRLIB_AlarmsEnabled) then {
@@ -91,10 +102,10 @@ _waitUntilExec = {
 		{
 			[_msg] remoteExec ["titleText", owner _x];
 		} forEach ([_missionPos, GRLIB_sector_size] call F_getNearbyPlayers);
-		private _grp = [([_missionPos, 120] call F_getRandomPos), 6, "militia", false] call createCustomGroup;
+		private _grp = [([_missionPos, 120] call F_getRandomPos), (3 + (floor random 4)), "militia", false] call createCustomGroup;
 		[_grp, _missionPos] spawn battlegroup_ai;
 		sleep 5;
-		private _grp = [([_missionPos, 120] call F_getRandomPos), 6, "militia", false] call createCustomGroup;
+		private _grp = [([_missionPos, 120] call F_getRandomPos), (3 + (floor random 4)), "militia", false] call createCustomGroup;
 		[_grp, _missionPos] spawn battlegroup_ai;
 		if (GRLIB_AlarmsEnabled) then {
 			playSound3D [_sound, _missionPos, false, ATLToASL _missionPos, 5, 1, 1000];
@@ -107,7 +118,8 @@ _waitUntilCondition = {	(({ alive _x } count _hostages) == 0) };
 _waitUntilSuccessCondition = {
 	private _alive_units = { alive _x } count _hostages;
 	private _free_units = { alive _x && !(_x getVariable ["GRLIB_is_prisoner", false]) } count _hostages;
-	(_alive_units > 0 && _free_units == _alive_units);
+	// (_alive_units > 0 && _free_units == _alive_units);
+	(_alive_units > 0 && _free_units >= 3);
 };
 
 _failedExec = {
@@ -117,6 +129,7 @@ _failedExec = {
 	{ deleteVehicle _x } forEach _managed_units;
 	{ deleteVehicle _x } forEach (units _grp_civ);
 	{ [_x, -15] call F_addReput } forEach (AllPlayers - (entities "HeadlessClient_F"));
+	
 	private _msg = format [localize "STR_SIDE_FAILED_REPUT", -15];
 	[gamelogic, _msg] remoteExec ["globalChat", 0];		
 };
@@ -125,6 +138,7 @@ _successExec = {
 	// Mission completed
 	_successHintMessage = "STR_FREE_HOSTAGES_MESSAGE2";
 	{ deleteVehicle _x } forEach (units _grp_civ);
+	{ deleteVehicle _x } forEach _managed_units;
 	if (combat_readiness > 50) then { combat_readiness = combat_readiness - 7 };
 	{ [_x, 10] call F_addReput } forEach (AllPlayers - (entities "HeadlessClient_F"));
 };

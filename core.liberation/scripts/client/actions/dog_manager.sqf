@@ -20,9 +20,9 @@ while {true} do {
 
 		// Reset Dog
 		_dog_pos = getPosATL _my_dog;
-		if ( _onfoot && _dog_pos distance2D player > 300 ) then {
+		if ( _onfoot && _dog_pos distance2D player > 130 ) then {
 			_my_dog setPosATL (getPos player);
-			_my_dog setVariable ["do_find", nil];
+			// _my_dog setVariable ["do_find", nil];
 			sleep 1;
 		};
 
@@ -86,7 +86,8 @@ while {true} do {
 							};
 							_tone = _my_dog getVariable "my_dog_tone";
 							[_my_dog, _tone] spawn dog_bark;
-							private _timer = time + (4 + floor random 8);
+							// private _timer = time + (4 + floor random 8);
+							private _timer = time + 45;
 							waitUntil { sleep 1; ( !(alive _man) || isNil {_my_dog getVariable "do_find"} || time >= _timer) };
 							_my_dog playMoveNow "Dog_Stop";
 							_my_dog stop false;
@@ -94,8 +95,8 @@ while {true} do {
 							_my_dog moveTo (getPos _man);
 							_dog_move = "Dog_Walk";
 							switch (true) do {
-								case (_dist > 5 && _dist <= 40): {_dog_move = "Dog_Run"};
-								case (_dist > 40): {_dog_move = "Dog_Sprint"};
+								case (_dist > 5 && _dist <= 50): {_dog_move = "Dog_Run"};
+								case (_dist > 50): {_dog_move = "Dog_Sprint"};
 							};
 							_my_dog playMoveNow _dog_move;
 						};
